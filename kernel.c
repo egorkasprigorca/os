@@ -30,19 +30,17 @@ void vga_write(char *msg) {
 	}
 }
 
-extern inline unsigned char inb (int portnum)
-{
+extern inline unsigned char inb (int portnum) {
   unsigned char data=0;
   __asm__ __volatile__ ("inb %%dx, %%al" : "=a" (data) : "d" (portnum));
   return data;
 }
 
-extern inline void outb (int portnum, unsigned char data)
-{
+extern inline void outb (int portnum, unsigned char data) {
   __asm__ __volatile__ ("outb %%al, %%dx" :: "a" (data),"d" (portnum));
 }
 
-#define PORT 0x3f8          // COM1
+#define PORT 0x3f8           // COM1
 
 static int init_serial() {
 	outb(PORT + 1, 0x00);    // Disable all interrupts
@@ -57,7 +55,7 @@ static int init_serial() {
 
 	// Check that we received the same test byte we sent
    	if(inb(PORT + 0) != 0xAE) {
-      return 1;
+      	return 1;
    	}
 
 	// If serial is not faulty set it in normal operation mode:
