@@ -24,10 +24,13 @@ void clear_screen() {
 	}
 }
 
-kernel_main() {
-	clear_screen();
-	char *msg = "Hello World";
+void vga_print(char *msg) {
 	while (*msg != '\0') {
 		*vga_buf++ = new_vga_entry(*msg++,  text_color);
 	}
+}
+
+kernel_main() {
+	clear_screen();
+	vga_print("Hello World. ");
 }
