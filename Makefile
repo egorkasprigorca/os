@@ -4,10 +4,10 @@ LD = ld
 QEMU = qemu-system-i386
 
 BUILD_DIR = build
-OBJECTS = ${BUILD_DIR}/boot.o ${BUILD_DIR}/kernel.o
+OBJECTS = ${BUILD_DIR}/boot.o ${BUILD_DIR}/kernel.o ${BUILD_DIR}/serial.o
 
 ASMFLAGS = -f elf32
-CFLAGS = -m32 -c -ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector
+CFLAGS = -m32 -c -ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -I include
 LDFLAGS = -m elf_i386 -T link.ld -nostdlib
 QEMUFLAGS = -kernel ${BUILD_DIR}/kernel.bin -serial stdio
 
@@ -26,6 +26,9 @@ ${BUILD_DIR}/kernel.bin: $(OBJECTS)
 ${BUILD_DIR}/boot.o: boot.asm | mkbuild
 	$(ASM) $(ASMFLAGS) -o $@ $<
 
+${BUILD_DIR}/serial.o: serial.c | mkbuild
+	$(CC) $(CFLAGS) -o $@ $<
+
 ${BUILD_DIR}/kernel.o: kernel.c | mkbuild
 	$(CC) $(CFLAGS) -o $@ $<
 
@@ -33,4 +36,4 @@ run: ${BUILD_DIR}/kernel.bin
 	$(QEMU) $(QEMUFLAGS)
 
 clean:
-	rm -f ${BUILD_DIR}
+	rm -rf ${BUILD_DIR}
